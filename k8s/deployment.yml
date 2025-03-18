@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  labels:
+    app: grab-token-service
+  name: grab-token-service
+  namespace: grab-car
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grab-token-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: grab-token-service
+    spec:
+      containers:
+        - image: ervincode/grabcar-token-service:${IMAGE_TAG}
+          imagePullPolicy: Always
+          name: grabcar-token-service
+          env:
+            - name: ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: SPRING_PROFILES_ACTIVE
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: PORT_TOKEN_SERVICE
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: DB_URL
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: DB_PASSWORD
+            - name: DB_DRIVER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_DRIVER
+            - name: MAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mail-smtp
+                  key: MAIL_HOST
+            - name: MAIL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mail-smtp
+                  key: MAIL_PASSWORD
+            - name: MAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mail-smtp
+                  key: MAIL_PORT
+            - name: MAIL_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mail-smtp
+                  key: MAIL_USERNAME
+
+---
+#services
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: grab-token-service
+  name: grab-token-service
+  namespace: grab-car
+spec:
+  ports:
+    - port: 7000
+      protocol: TCP
+      targetPort: 7000
+  selector:
+    app: grab-token-service
+  sessionAffinity: None
+  type: ClusterIP
