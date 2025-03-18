@@ -59,22 +59,22 @@ spec:
                   key: DB_DRIVER
             - name: MAIL_HOST
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: mail-smtp
                   key: MAIL_HOST
             - name: MAIL_PASSWORD
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: mail-smtp
                   key: MAIL_PASSWORD
             - name: MAIL_PORT
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: mail-smtp
                   key: MAIL_PORT
             - name: MAIL_USERNAME
               valueFrom:
-                configMapKeyRef:
+                secretKeyRef:
                   name: mail-smtp
                   key: MAIL_USERNAME
 
