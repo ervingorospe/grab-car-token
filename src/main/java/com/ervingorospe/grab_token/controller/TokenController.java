@@ -23,13 +23,14 @@ public class TokenController {
         return "test";
     }
 
-    @PostMapping("/generate/{id}")
-    public ResponseEntity<String> createToken(@PathVariable String id, @RequestParam(defaultValue = "registration") String type) {
-        tokenService.saveToken(UUID.fromString(id), type);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Token Generated");
-    }
+    // uses kafka to generate token
+//    @PostMapping("/generate/{id}")
+//    public ResponseEntity<String> createToken(@PathVariable String id, @RequestParam(defaultValue = "registration") String type) {
+//        tokenService.saveToken(UUID.fromString(id), type);
+//        return ResponseEntity.status(HttpStatus.CREATED).body("Token Generated");
+//    }
 
-    @PostMapping("/{id}/verify/{token}")
+    @GetMapping("/{id}/verify/{token}")
     public ResponseEntity<String> verifyToken(@PathVariable String id, @PathVariable String token, @RequestParam(defaultValue = "registration") String type) {
         tokenService.verifyToken(UUID.fromString(id), token, type);
 

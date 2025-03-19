@@ -24,6 +24,9 @@ public class GrabTokenApplication {
 			System.setProperty("MAIL_PORT", dotenv.get("MAIL_PORT"));
 			System.setProperty("MAIL_USERNAME", dotenv.get("MAIL_USERNAME"));
 			System.setProperty("MAIL_PASSWORD", dotenv.get("MAIL_PASSWORD"));
+            System.setProperty("API_GATEWAY_URL", dotenv.get("API_GATEWAY_URL"));
+            System.setProperty("KAFKA_SERVER", dotenv.get("KAFKA_SERVER"));
+            System.setProperty("KAFKA_GROUP_ID", dotenv.get("KAFKA_GROUP_ID"));
 		} else {
 			// Running in Kubernetes (use environment variables)
 			System.setProperty("DB_URL", System.getenv("DB_URL"));
@@ -34,6 +37,9 @@ public class GrabTokenApplication {
 			System.setProperty("MAIL_PORT", System.getenv("MAIL_PORT"));
 			System.setProperty("MAIL_USERNAME", System.getenv("MAIL_USERNAME"));
 			System.setProperty("MAIL_PASSWORD", System.getenv("MAIL_PASSWORD"));
+            System.setProperty("API_GATEWAY_URL", System.getenv("API_GATEWAY_URL"));
+            System.setProperty("KAFKA_SERVER", System.getenv("KAFKA_SERVER"));
+            System.setProperty("KAFKA_GROUP_ID", System.getenv("KAFKA_GROUP_ID"));
 		}
 
 		SpringApplication.run(GrabTokenApplication.class, args);

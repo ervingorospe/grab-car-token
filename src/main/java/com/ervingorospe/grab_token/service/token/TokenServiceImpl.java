@@ -10,6 +10,7 @@ import com.ervingorospe.grab_token.service.email.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,9 @@ import java.util.UUID;
 
 @Service
 public class TokenServiceImpl implements TokenService{
+    @Value("${apiGatewayUrl}")
+    private String apiGatewayUrl;
+
     private final TokenRepo repository;
     private final UserRepo userRepo;
     private final EmailService emailService;
@@ -31,7 +35,7 @@ public class TokenServiceImpl implements TokenService{
     @Override
     @Transactional
     public void saveToken(UUID id, String type) {
-        User user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User Does not exist"));
+        User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("User Does not exist"));
 
         String token = UUID.randomUUID().toString();
         LocalDateTime expiration = LocalDateTime.now().plusHours(24);
@@ -40,7 +44,7 @@ public class TokenServiceImpl implements TokenService{
         repository.save(newToken);
 
         try {
-            String emailContent = "<a href='http://localhost:7000/token/%s/verify/%s?type=%s'>Click here to verify your account</a>".formatted(user.getId(),token, type);
+            String emailContent = "<a href='%s/token/%s/verify/%s?type=%s'>Click here to verify your account</a>".formatted(apiGatewayUrl,user.getId(),token, type);
             emailService.sendEmail(user.getEmail(), "Verification", emailContent);
         } catch (MessagingException e) {
            throw new RuntimeException("Failed to sent email");
