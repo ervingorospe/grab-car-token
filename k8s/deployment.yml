@@ -77,6 +77,21 @@ spec:
                 secretKeyRef:
                   name: mail-smtp
                   key: MAIL_USERNAME
+            - name: KAFKA_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-secrets
+                  key: KAFKA_SERVER
+            - name: KAFKA_GROUP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-secrets
+                  key: KAFKA_GROUP_ID
+            - name: API_GATEWAY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: grab-urls
+                  key: API_GATEWAY_URL
 
 ---
 #services
